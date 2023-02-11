@@ -13,19 +13,26 @@ def index():
 
 
 # Define route and Verify_otp() function below
-@app.route('/login', methods=["POST"])
+@app.route('/login' , methods=['POST'])
 def verify_otp():
     username = request.form['username']
     password = request.form['password']
     mobile_number = request.form['number']
-    if username == 'verify' and password == '12345':
-        acoount_sid = 'AC68033d0260e4c2f3ac073784ef67248b'
+
+    if username == 'verify' and password == '12345':   
+        account_sid = 'AC68033d0260e4c2f3ac073784ef67248b'
         auth_token = '27ee99a383d92894c3875228a7fab09c'
-        client = Client(acoount_sid, auth_token)
+        client = Client(account_sid, auth_token)
+
+        verification = client.verify \
+            .services('VA7fa0d40c162843de97a9e39eb453c8c5') \
+            .verifications \
+            .create(to=mobile_number, channel='sms')
+
         print(verification.status)
         return render_template('otp_verify.html')
     else:
-        return 'Entered User ID or Password is wrong'
+        return render_template('user_error.html')
 
 
 
